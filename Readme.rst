@@ -42,21 +42,32 @@ Make a yaml specification inside your ``~/.ssh`` folder:
 					options:
 						User: ubuntu
 						IdentifyFile: ~/.ssh/aws-identity
+					count: 2
+					count_start: 3
 					formatting:
 						- format_options: {'reason': project1}
-						  count: 3
 						  alias: project1-{count}
 						- format_options: {'reason': project2}
-						  count: 4
 						  alias: project2-{count}
+
+				a-jumphost:
+					alias: jh
+					proxying:
+						a-server-{count}:
+							count: 4
 
 		"another section":
 			options:
 				SomeOption: someValue
+			simple:
+				short: long_host_name-1.many.domain.names
 			hosts:
 				elsewhere:
 				somewhere:
 					alias: a_nice_place
+
+				place:
+					proxied_by: another_place
 
 And then you run::
 
@@ -78,38 +89,51 @@ And generate a ssh config that looks like::
 
 	Host elsewhere
 	HostName elsewhere
-	SomeOption somevalue
+	SomeOption someValue
+
+	Host place
+	HostName place
+	ProxyCommand ssh -q another_place -W %h:%p
+	SomeOption someValue
 
 	Host somewhere a_nice_place
 	HostName somewhere
+	SomeOption someValue
+
+	Host long_host_name-1.many.domain.names short
+	HostName long_host_name-1.many.domain.names
 	SomeOption someValue
 
 	#########################
 	###  WORK
 	#########################
 
-	Host aws-project1-1 project1-1
-	HostName aws-project1-1
-	IdentifyFile ~/.ssh/aws-identity
-	User ubuntu
+	Host a-jumphost jh
+	HostName a-jumphost
 
-	Host aws-project1-2 project1-2
-	HostName aws-project1-2
-	IdentifyFile ~/.ssh/aws-identity
-	User ubuntu
+	Host a-server-1
+	HostName a-server-1
+	ProxyCommand ssh -q a-jumphost -W %h:%p
+
+	Host a-server-2
+	HostName a-server-2
+	ProxyCommand ssh -q a-jumphost -W %h:%p
+
+	Host a-server-3
+	HostName a-server-3
+	ProxyCommand ssh -q a-jumphost -W %h:%p
+
+	Host a-server-4
+	HostName a-server-4
+	ProxyCommand ssh -q a-jumphost -W %h:%p
 
 	Host aws-project1-3 project1-3
 	HostName aws-project1-3
 	IdentifyFile ~/.ssh/aws-identity
 	User ubuntu
 
-	Host aws-project2-1 project2-1
-	HostName aws-project2-1
-	IdentifyFile ~/.ssh/aws-identity
-	User ubuntu
-
-	Host aws-project2-2 project2-2
-	HostName aws-project2-2
+	Host aws-project1-4 project1-4
+	HostName aws-project1-4
 	IdentifyFile ~/.ssh/aws-identity
 	User ubuntu
 
