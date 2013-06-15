@@ -79,6 +79,8 @@ class Host(object):
         """Yield hosts as strings from the provided host and options"""
         for raw_host, host, options, proxying in self.spinoffs:
             new_options = merge_options(self.options.get('options'), options)
+            if self.proxied_by and 'ProxyCommand' not in new_options:
+                new_options['ProxyCommand'] = self.proxy_command(self.proxied_by)
             other_options = sorted((key, val) for key, val in new_options.items() if key != 'HostName')
             yield self.lines_for([("Host", host), ("HostName", new_options['HostName'])] + other_options)
 
@@ -92,6 +94,11 @@ class Host(object):
     def alias(self):
         """Return alias if we have one"""
         return self.options.get("alias")
+
+    @property
+    def proxied_by(self):
+        """Return proxied_by if we have one"""
+        return self.options.get("proxied_by")
 
     @property
     def count(self):

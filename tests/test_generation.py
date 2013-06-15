@@ -320,3 +320,17 @@ describe unittest.TestCase, "Generating ssh configs":
 
 			self.assertExpectedGenerationHosts(template, expected)
 
+		it "has a proxied_by option":
+			template = """
+			blah:
+				proxied_by: a-place
+			"""
+
+			expected = """
+			Host blah
+			HostName blah
+			ProxyCommand ssh -q a-place -W %h:%p
+			"""
+
+			self.assertExpectedGenerationHosts(template, expected)
+
