@@ -1,3 +1,4 @@
+from itertools import chain
 import types
 
 class BadTemplateException(Exception):
@@ -57,7 +58,13 @@ class Section(object):
     @property
     def hosts(self):
         """Return hosts for this section if any"""
-        for host, options in sorted(self.options.get("hosts", {}).items()):
+        hosts = self.options.get("hosts", {})
+        if isinstance(hosts, dict):
+            hosts = hosts.items()
+        else:
+            hosts = chain.from_iterable([host.items() for host in hosts])
+
+        for host, options in sorted(hosts):
             yield Host(host, self.update_options(options))
 
         for alias, host in sorted(self.options.get("simple", {}).items()):

@@ -412,3 +412,21 @@ describe unittest.TestCase, "Generating ssh configs":
 
 			self.assertExpectedGenerationHosts(template, expected)
 
+		it "supports hosts as a list":
+			template = """
+			- one-{extra}:
+				format_options: {extra: b}
+			- one-{extra}:
+				format_options: {extra: c}
+			"""
+
+			expected = """
+			Host one-b
+			HostName one-b
+
+			Host one-c
+			HostName one-c
+			"""
+
+			self.assertExpectedGenerationHosts(template, expected)
+
