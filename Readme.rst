@@ -30,7 +30,12 @@ Make a yaml specification inside your ``~/.ssh`` folder:
 		Host *
 		User bob
 		ForwardX11 yes
-	
+
+	hosts:
+		prefixed-*:
+			proxied_by: some_jumphost
+			add_hostname: False
+
 	sections:
 		work:
 			hosts:
@@ -85,6 +90,9 @@ And generate a ssh config that looks like::
 	Host *
 	User bob
 	ForwardX11 yes
+
+	Host prefixed-*
+	ProxyCommand ssh ssh -q some_jumphost -W %h:%p
 
 	#########################
 	###  ANOTHER SECTION

@@ -398,3 +398,17 @@ describe unittest.TestCase, "Generating ssh configs":
 
 			self.assertExpectedGenerationHosts(template, expected)
 
+		it "can be told not to add a hostname":
+			template = """
+			prefixed-* *-postfixed:
+				proxied_by: a_jh
+				add_hostname: False
+			"""
+
+			expected = """
+			Host prefixed-* *-postfixed
+			ProxyCommand ssh -q a_jh -W %h:%p
+			"""
+
+			self.assertExpectedGenerationHosts(template, expected)
+

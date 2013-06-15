@@ -92,7 +92,12 @@ class Host(object):
             if self.proxied_by and 'ProxyCommand' not in new_options:
                 new_options['ProxyCommand'] = self.proxy_command(self.proxied_by)
             other_options = sorted((key, val) for key, val in new_options.items() if key != 'HostName')
-            yield self.lines_for([("Host", host), ("HostName", new_options['HostName'])] + other_options)
+
+            host_options = [("Host", host)]
+            if self.add_hostname:
+                host_options.append(("HostName", new_options['HostName']))
+
+            yield self.lines_for(host_options + other_options)
 
             for proxied, options in proxying.items():
                 proxied_options = merge_options(options)
@@ -104,6 +109,11 @@ class Host(object):
     def alias(self):
         """Return alias if we have one"""
         return self.options.get("alias")
+
+    @property
+    def add_hostname(self):
+        """Return if we should be adding a HostName automagically"""
+        return self.options.get("add_hostname", True)
 
     @property
     def proxied_by(self):
