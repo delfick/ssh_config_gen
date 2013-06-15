@@ -3,7 +3,7 @@ from setuptools import setup
 # Setup the project
 setup(
       name = "ssh-config-gen"
-    , version = '0.1'
+    , version = '0.2'
     , packages = ['ssh_config_gen']
 
     , install_requires =
