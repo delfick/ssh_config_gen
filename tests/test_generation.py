@@ -213,6 +213,26 @@ describe unittest.TestCase, "Generating ssh configs":
 
 		self.assertExpectedGeneration(template, expected)
 
+	it "can pass format_options from section to hosts":
+		template = """
+		format_options:
+			prefix: stuff
+
+		hosts:
+			"{prefix}-blah-{count}":
+				count: 2
+		"""
+
+		expected = """
+		Host stuff-blah-1
+		HostName stuff-blah-1
+
+		Host stuff-blah-2
+		HostName stuff-blah-2
+		"""
+
+		self.assertExpectedGeneration(template, expected)
+
 	describe "Hosts":
 		def assertExpectedGenerationHosts(self, template, expected):
 			template = dedent("""

@@ -45,6 +45,11 @@ class Section(object):
         return '\n'.join(['#' * 25, "{}  {}".format('#' * 3, self.name.upper()), '#' * 25])
 
     @property
+    def format_options(self):
+        """Return format_options for this section"""
+        return self.options.get("format_options")
+
+    @property
     def verbatim(self):
         """Return verbatim options for this section if any"""
         return self.options.get("verbatim", "").strip()
@@ -68,9 +73,10 @@ class Section(object):
         new_options = {}
         if options:
             new_options.update(options)
-        else:
-            options = {}
-        new_options['options'] = merge_options(self.options.get('options'), options.get("options"))
+
+        for key in ('options', 'format_options'):
+            new_options[key] = merge_options(self.options.get(key), new_options.get(key))
+
         return new_options
 
 class Host(object):
