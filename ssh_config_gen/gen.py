@@ -52,7 +52,11 @@ class Section(object):
     @property
     def hosts(self):
         """Return hosts for this section if any"""
-        return [Host(host, self.update_options(options)) for host, options in sorted(self.options.get("hosts", {}).items())]
+        for host, options in sorted(self.options.get("hosts", {}).items()):
+            yield Host(host, self.update_options(options))
+
+        for alias, host in sorted(self.options.get("simple", {}).items()):
+            yield Host(host, self.update_options({'alias': alias}))
 
     @property
     def sections(self):

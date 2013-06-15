@@ -196,6 +196,23 @@ describe unittest.TestCase, "Generating ssh configs":
 
 		self.assertExpectedGeneration(template, expected)
 
+	it "simple aliased hosts":
+		template = """
+		simple:
+			a: b
+			c: d
+		"""
+
+		expected = """
+		Host b a
+		HostName b
+
+		Host d c
+		HostName d
+		"""
+
+		self.assertExpectedGeneration(template, expected)
+
 	describe "Hosts":
 		def assertExpectedGenerationHosts(self, template, expected):
 			template = dedent("""
