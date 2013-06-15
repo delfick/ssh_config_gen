@@ -152,10 +152,17 @@ class Host(object):
                     format_options = self.adjust_format_counts(format_options)
                     format_options['count'] = str(index + count_start)
 
-                host = self.host.format(**format_options)
+                try:
+                    host = self.host.format(**format_options)
+                except (KeyError, ValueError) as error:
+                    raise BadTemplateException("Failed to format host '{}' with {}: {}".format(self.host, format_options, error))
+
                 formatted_alias =alias
                 if alias:
-                    formatted_alias = alias.format(**format_options)
+                    try:
+                        formatted_alias = alias.format(**format_options)
+                    except (KeyError, ValueError) as error:
+                        raise BadTemplateException("Failed to format host '{}' with {}: {}".format(self.alias, format_options, error))
 
                 # Setup the hostname and add any aliases
                 raw_host = host

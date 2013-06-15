@@ -18,7 +18,7 @@ setup(
 
     , entry_points =
       { 'console_scripts' :
-        [ 'ssh-config-gen = ssh_config_gen.main:main'
+        [ 'ssh-config-gen = ssh_config_gen.main:catcher_main'
         ]
       }
 

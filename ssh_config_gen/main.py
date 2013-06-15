@@ -5,7 +5,7 @@ import yaml
 import sys
 import os
 
-from ssh_config_gen.gen import Section
+from ssh_config_gen.gen import Section, BadTemplateException
 
 home_dir = os.path.expanduser("~")
 
@@ -47,7 +47,12 @@ def main(argv=None):
         output_location = output_location.name
 
     # Create our new config
-    generated = make_ssh_config(yaml.load(args.template))
+    try:
+        options = yaml.load(args.template)
+    except yaml.parser.ParserError as error:
+        raise BadTemplateException("Invalid yaml! {}".format(error))
+
+    generated = make_ssh_config(options)
 
     # Make sure to backup the config if that's what we're writing to
     backup_location = None
@@ -70,9 +75,18 @@ def main(argv=None):
         shutil.copy(backup_location, config_location)
         raise
 
-if __name__ == '__main__':
+def catcher_main():
+    """Run main with try..excepts to make nicer error messages to console"""
     try:
         main()
     except KeyboardInterrupt:
-        pass
+        sys.exit(1)
+    except BadTemplateException as error:
+        print "Failed to parse the template!"
+        print "============================="
+        print error
+        sys.exit(1)
+
+if __name__ == '__main__':
+    catcher_main()
 
