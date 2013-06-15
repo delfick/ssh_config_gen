@@ -300,6 +300,10 @@ describe unittest.TestCase, "Generating ssh configs":
 			blah-{count}:
 				count: 5
 
+			meh-{count}:
+				count: 2
+				count_start: 2
+
 			meh-{typ}-{count}:
 				alias: "{typ}-{count}"
 				formatting:
@@ -324,6 +328,12 @@ describe unittest.TestCase, "Generating ssh configs":
 
 			Host blah-5
 			HostName blah-5
+
+			Host meh-2
+			HostName meh-2
+
+			Host meh-3
+			HostName meh-3
 
 			Host meh-one-1 one-1
 			HostName meh-one-1

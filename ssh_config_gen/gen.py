@@ -110,6 +110,11 @@ class Host(object):
         return self.options.get("count")
 
     @property
+    def count_start(self):
+        """Return count_start if we have one"""
+        return self.options.get("count_start", 1)
+
+    @property
     def proxying(self):
         """Return (host, options) for anything this host is proxying"""
         return self.options.get("proxying", {})
@@ -123,9 +128,11 @@ class Host(object):
 
         if formatting:
             for nxt in formatting:
-                yield (nxt.get('format_options', {}), nxt.get('options', {}), nxt.get("proxying", {}), nxt.get('alias', self.alias), nxt.get('count', self.count))
+                yield [nxt.get(key, dflt) for key, dflt in
+                    [('format_options', {}), ('options', {}), ('proxying', {}), ('alias', self.alias), ('count', self.count), ('count_start', self.count_start)]
+                ]
         else:
-            yield (None, {}, self.proxying, self.alias, self.count)
+            yield (None, {}, self.proxying, self.alias, self.count, self.count_start)
 
     @property
     def format_options(self):
@@ -135,15 +142,15 @@ class Host(object):
     @property
     def spinoffs(self):
         """Yield (host, options) pairs that come from this host"""
-        for format_options, options, proxying, alias, count in list(self.formatting):
+        for format_options, options, proxying, alias, count, count_start in list(self.formatting):
             format_options = merge_options(self.format_options, format_options)
 
             if not count:
                 count = 1
             for index in range(count):
-                if format_options.get('count') != str(index+1):
+                if format_options.get('count') != str(index + count_start):
                     format_options = self.adjust_format_counts(format_options)
-                    format_options['count'] = str(index + 1)
+                    format_options['count'] = str(index + count_start)
 
                 host = self.host.format(**format_options)
                 formatted_alias =alias
