@@ -150,7 +150,7 @@ describe unittest.TestCase, "Generating ssh configs":
 
 		Host anotherPlace
 		HostName anotherPlace
-		ProxyCommand ssh anotherDifferentUser -W %h:%p
+		ProxyCommand ssh -q anotherDifferentUser -W %h:%p
 		User Jo
 		"""
 
@@ -272,7 +272,7 @@ describe unittest.TestCase, "Generating ssh configs":
 
 			Host things things-alias-office
 			HostName things
-			ProxyCommand ssh blah-two-office -W %h:%p
+			ProxyCommand ssh -q blah-two-office -W %h:%p
 			User Reggie
 			"""
 

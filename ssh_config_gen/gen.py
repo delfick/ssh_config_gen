@@ -165,7 +165,7 @@ class Host(object):
 
     def proxy_command(self, host):
         """Return a proxy command to this host"""
-        return "ssh {} -W %h:%p".format(host)
+        return "ssh -q {} -W %h:%p".format(host)
 
     def adjust_format_counts(self, options):
         """Move around the count variables in the options"""
