@@ -381,3 +381,20 @@ describe unittest.TestCase, "Generating ssh configs":
 
 			self.assertExpectedGenerationHosts(template, expected)
 
+		it "supports 0 based counts":
+			template = """
+			blah-{count:02d}:
+				alias: blah-{count}
+				count: 2
+			"""
+
+			expected = """
+			Host blah-01 blah-1
+			HostName blah-01
+
+			Host blah-02 blah-2
+			HostName blah-02
+			"""
+
+			self.assertExpectedGenerationHosts(template, expected)
+

@@ -69,6 +69,9 @@ Make a yaml specification inside your ``~/.ssh`` folder:
 				place:
 					proxied_by: another_place
 
+				with_leading_zero-{count:02d}:
+					count: 2
+
 And then you run::
 
 	$ ssh_config_gen --output ~/.ssh/config
@@ -98,6 +101,14 @@ And generate a ssh config that looks like::
 
 	Host somewhere a_nice_place
 	HostName somewhere
+	SomeOption someValue
+
+	Host with_leading_zero-01
+	HostName with_leading_zero-01
+	SomeOption someValue
+
+	Host with_leading_zero-02
+	HostName with_leading_zero-02
 	SomeOption someValue
 
 	Host long_host_name-1.many.domain.names short

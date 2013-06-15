@@ -154,9 +154,9 @@ class Host(object):
             if not count:
                 count = 1
             for index in range(count):
-                if format_options.get('count') != str(index + count_start):
+                if format_options.get('count') != index + count_start:
                     format_options = self.adjust_format_counts(format_options)
-                    format_options['count'] = str(index + count_start)
+                    format_options['count'] = index + count_start
 
                 try:
                     host = self.host.format(**format_options)
@@ -200,7 +200,7 @@ class Host(object):
 
     def adjust_format_counts(self, options):
         """Move around the count variables in the options"""
-        counts = [(key[5:] or '0', val) for key, val in options.items() if str(key).startswith("count") and not str(key)[5:] or str(key)[5:].isdigit()]
+        counts = [(key[5:] or 0, val) for key, val in options.items() if str(key).startswith("count") and not str(key)[5:] or str(key)[5:].isdigit()]
         if 'count' in options:
             del options['count']
 
